@@ -1,0 +1,94 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">  
+  <title>BTree</title> 
+  <link rel="stylesheet" href="./qunit/qunit.css" type="text/css" media="screen">
+</head>
+<body>
+	
+	<h1 id="qunit-header">BTree</h1>
+    <h2 id="qunit-banner"></h2>
+    <h2 id="qunit-userAgent"></h2>
+    <ol id="qunit-tests"></ol>
+    
+	
+	<!-- lib -->
+	<script src="../lib/jquery-1.4.4.min.js" type="application/javascript"></script>
+
+	<!-- tests -->
+	<script src="./qunit/qunit.js" type="application/javascript"></script>
+	<script src="../js/btree.js" type="application/javascript"></script>
+
+	<script type="application/javascript">
+	
+	module('BTreeNode');	
+	test('manually assigned leaf node tests', function() {
+
+		ok(new BTreeNode());
+
+		var btree = new BTreeNode();
+		btree.data = 123;
+		equal(btree.data, 123);
+
+		var btree2 = new BTreeNode();
+		btree2.left = 312;
+		equal(btree2.left, 312);
+
+		var btree3 = new BTreeNode();
+		btree3.right = 987;
+		equal(btree3.right, 987);		
+		btree3.right = 999;
+		equal(btree3.right, 999);		
+
+		var btree4 = new BTreeNode(1, 2, 3);
+		equal(btree4.data + btree4.left + btree4.right, 6);
+
+		var btree5 = new BTreeNode();
+		equal(btree5.data, null);
+		
+	});
+		
+		
+	module('BinaryTree');	
+	test('inserts', function() {
+	
+		ok(new BinaryTree());
+
+		var tree = new BinaryTree();
+		tree.insert(2);
+		equals(tree.getRoot().data, 2, 'correctly assigned root node'); 
+
+		// btree insertion one by one
+		var btree = new BinaryTree();
+		btree.insert(2); 
+		btree.insert(1);
+		btree.insert(3);
+		btree.insert(6);
+		btree.insert(5);
+
+		equals(btree.getRoot().left.data, 1, 'correctly assigned left leaf'); 
+		equals(btree.getRoot().right.data, 3, 'correctly assigned right leaf'); 
+		equals(btree.getRoot().right.right.data, 6, 'correctly assigned two levels deep right leaf'); 
+
+		// optional array interface
+		var btree1 = new BinaryTree();
+		btree1.insert([2,1,3,6,5]); 
+		equals(btree1.getRoot().right.right.data, 6, 'correctly assigned two levels deep right leaf from array input'); 
+
+		// insertion of alphabet characters
+		var btree2 = new BinaryTree();
+		btree2.insert(['m','t','f','s','e']); 
+		equals(btree2.getRoot().data, 'm'.charCodeAt(0).toFixed(), 'assigned root non-alphanumeric character'); 
+		equals(btree2.getRoot().right.data, 't'.charCodeAt(0).toFixed(), 'assigned root non-alphanumeric character one level deep'); 
+
+		// insertion of multi-character alphabet characters
+		var btree3 = new BinaryTree();
+		btree3.insert(['moo','taa','far','so','elephants']); 
+		equals(btree3.getRoot().data, "moo".split("").map(function(e){return e.charCodeAt(0);}).join(""), 'multi character string inserted at root'); 
+		equals(btree3.getRoot().right.data, 1169797, 'multi character string "taa" inserted at right leaf node'); 
+				
+	});
+
+	</script>
+
+</body>
